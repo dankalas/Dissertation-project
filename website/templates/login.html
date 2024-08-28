@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible"
+    content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyCommute</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+        crossorigin="anonymous"
+        />
+    <link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        crossorigin="anonymous"
+        />
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+
+    <div id="flash-messages"></div>
+    
+    <div class="wrapper">
+        <div class="form-wrapper sign-up">
+            <form action="/sign-up" method="POST">
+                <h2>Sign Up</h2>
+                <div class="input-group">
+                    <input type="text" id="Firstname" name="Firstname" required>
+                    <label for="">First name</label>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="Lastname" name="Lastname" required>
+                    <label for="">Last name</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" name="email" required>
+                    <label for="">Email Address</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password1" name="password1" required>
+                    <label for="">Password</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password2" name="password2" required>
+                    <label for="">Confirm Password</label>
+                </div>
+                <button type="submit" class="btn">Sign Up
+                </button>
+                <div class="sign-link">
+                        <p>Already have an account?  <a href="#" 
+                        class="signIn-link">Sign In</a></p>
+                </div>
+            </form>
+        </div>
+    
+        
+        <div class="form-wrapper sign-in">
+            <form method="POST">
+                <h2>Login</h2>
+                <div class="input-group">
+                    <input type="email" id="email" name="email" required>
+                    <label for="">Email Address</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" required id="Password" name="password">
+                    <label for="">Password</label>
+                </div>
+                <div class="forgot-pass">
+                    <a href="#">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn">Login
+                </button>
+                <div class="sign-link">
+                        <p>Don't have an account?  <a href="#" 
+                        class="signUp-link">Sign up</a></p>
+                </div>
+            </form>
+        </div> 
+    </div>
+    <script src="../static/login.js"></script>
+</body>
+</html>
