@@ -205,7 +205,7 @@ def run_process(start_location, end_location, mode, weights):
         return
     
     # Get routes
-    routes = get_routes(start_coords, end_coords)
+    routes = get_routes(start_coords, end_coords, mode)
     
     # Process routes into a dataframe
     df = process_routes(routes)
@@ -224,9 +224,7 @@ def run_process(start_location, end_location, mode, weights):
     df2["Norm AQI"] = normalize(df2["AQI"], 0, 70)
     df2["Norm Safety Rating"] = normalize(df2["Safety Rating"], 0, 5)
 
-    # Display the additional data
-    print("Additional Data:")
-    display(df2)
+
     
     # Create separate dataframes for each route label
     route_labels = df2["Route Label"].unique()

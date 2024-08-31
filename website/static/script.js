@@ -6,6 +6,7 @@ let userWeights = {};
 
 // Handle form submission for weight inputs
 document.getElementById('weight-form').addEventListener('submit', function(event) {
+    console.log("this is running")
     event.preventDefault();  // Prevent the default form submission
 
     // Collect the weights entered by the user
