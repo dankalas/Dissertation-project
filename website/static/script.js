@@ -70,6 +70,11 @@ function setupMap(center) {
         const routes = event.route;
         const start_location = routes[0].legs[0].steps[0].maneuver.location.join(',');
         const end_location = routes[0].legs[0].steps.slice(-1)[0].maneuver.location.join(',');
+        const start_location_name =routes[0].legs[0].summary;
+        const end_location_name = routes[0].legs.slice(-1)[0].summary;  
+        console.log(routes[0])
+        // Retrieve the selected mode from the directions control
+        //const selectedMode = directions.getOrigin().properties.mode; // Get the mode from the directions control
 
         // Send data to the Flask server with user-selected weights
         fetch('/optimize_route', {
@@ -81,6 +86,8 @@ function setupMap(center) {
                 start_location: start_location,
                 end_location: end_location,
                 mode: 'cycling',
+                start_location_name, 
+                end_location_name,
                 weights: userWeights  // Use the user-selected weights
             })
         })

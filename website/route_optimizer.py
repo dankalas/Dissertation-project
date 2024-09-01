@@ -6,6 +6,7 @@ import numpy as np
 from gplearn.genetic import SymbolicRegressor
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
+import json
 
 
 # Define your Mapbox token
@@ -75,7 +76,10 @@ def process_routes(routes):
             'Route Label': f'Route {idx + 1}',
             'Distance (km)': route['distance'] / 1000,  # Convert to kilometers
             'Duration (minutes)': route['duration'] / 60,  # Convert to minutes
+            'Start location': route['legs'][0]['summary'],
+            'End location': route['legs'][-1]['summary'],
         })
+    print(data)
     return pd.DataFrame(data)
 
 # Function to apply custom weights and calculate the weighted score
@@ -307,17 +311,34 @@ def run_process(start_location, end_location, mode, weights):
             'First Row': first_row
         })
         
-        print(f"Route: {label}")
-        print(f"RMSE: {rmse}")
+        #print(f"Route: {label}")
+        #print(f"RMSE: {rmse}")
 
     # Sort results by RMSE (lowest first)
     route_results.sort(key=lambda x: x['RMSE'])
     
     # Display RMSE results
-    print("RMSE for each route:")
-    for result in route_results:
-        print(f"Route {result['Route Label']}: RMSE = {result['RMSE']}")
+    #print("RMSE for each route:")
+    #for result in route_results:
+        #print(f"Route {result['Route Label']}: RMSE = {result['RMSE']}")
 
     # Return the ranked routes with RMSE and the first row of each route
-    return route_results
-
+    def normalize_results(results= {}):
+        ret = {}
+        for key in results:
+            print(type(results[key]))
+            if isinstance(results[key], str) or isinstance(results[key], int) or isinstance(results[key], float):
+                ret[key] = results[key]
+            elif isinstance(results[key], np.float64) or isinstance(results[key], np.float32):
+                ret[key] = results[key].item()
+            elif isinstance(results[key], pd.Series):
+                jsonvalue = results[key].to_json()
+                obj = json.loads(jsonvalue)
+                for k in obj:
+                    ret[k] = obj[k] 
+                continue
+            
+        return ret
+            
+    print("result is", route_results)
+    return list(map(normalize_results, route_results))
