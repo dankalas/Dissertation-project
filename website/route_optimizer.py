@@ -15,7 +15,7 @@ MAPBOX_TOKEN = 'pk.eyJ1IjoiZGFuaWVsYWthbGFtdWRvIiwiYSI6ImNseW4wNno4bTAxNDAya3M0Y
 # Average speeds in km/h for different modes
 speeds = {
     "driving": 60,
-    "traffic": 50,
+    "driving-traffic": 50,
     "walking": 5,
     "cycling": 15
 }
@@ -23,7 +23,7 @@ speeds = {
 # Calories burned per hour
 calories_burned_per_hour = {
     "driving": 0,
-    "traffic": 0,
+    "driving-traffic": 0,
     "walking": 300,
     "cycling": 600
 }
@@ -31,7 +31,7 @@ calories_burned_per_hour = {
 # Carbon footprint in grams of CO2 per kilometer
 carbon_footprint_per_km = {
     "driving": 170,
-    "traffic": 150,
+    "driving-traffic": 150,
     "walking": 0,
     "cycling": 0
 }
@@ -50,7 +50,7 @@ def geocode_location(location):
 
 def get_routes(start_coords, end_coords, mode):
     # Validate mode input to ensure it's one of the accepted modes by Mapbox
-    valid_modes = ['driving', 'walking', 'cycling','traffic']
+    valid_modes = ['driving', 'walking', 'cycling','driving-traffic']
     if mode not in valid_modes:
         raise ValueError(f"Invalid mode. Choose from {valid_modes}")
 

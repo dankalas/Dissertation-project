@@ -1,13 +1,59 @@
 // Mapbox access token
 mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaWVsYWthbGFtdWRvIiwiYSI6ImNseW4wNno4bTAxNDAya3M0YjJqNHkwamMifQ.RXniMT8_Seus5fdPUJ2XRA';
+const APP_STORE = {};
+let previousControl = null;
+class OptimizedRoutesControl {
+    constructor(routeResults = []) {
+        this.routeResults = routeResults
+    }
+    onAdd(map) {
+        this.map = map;
+        this.container = document.createElement('div');
+        this.container.className = 'mapboxgl-ctrl scrollable-list-container bg-light-subtle';
+        this.container.style.width = '250px';
+        this.container.style.maxHeight = '100vh';
+        this.container.style.overflowY = 'auto';
+        this.container.style.backgroundColor = '#f8f8f8';
+        this.container.style.borderLeft = '1px solid #ccc';
+        this.container.style.padding = '10px';
+        this.container.classList.add('container');
+        
+        let innerHTML =  this.routeResults.map(route =>{
+           const inner = Object.entries(route).map(([key, value]) => {
+                return `<li class="list-group-item">
+                    <p>${key}</p>
+                    <p class="flex-fill">${value}</p>
+                </li>`
+            }).join('\n')
+
+            return `
+            <h4>${route["Route Label"]}</h4>
+            <ul class="list-group">${inner}</ul>`;
+        }).join('<hr>')
+        this.container.innerHTML = innerHTML;
+        return this.container;
+    }
+
+    onRemove() {
+        this.container.parentNode.removeChild(this.container);
+        this.map = undefined;
+        
+    }
+}
+
+
 
 // Initialize user weights object
 let userWeights = {};
+let directionsControl;  // Declare this globally to modify it later
+let selectedMode = 'cycling';  // Default mode
 
 // Handle form submission for weight inputs
 document.getElementById('weight-form').addEventListener('submit', function(event) {
-    console.log("this is running")
     event.preventDefault();  // Prevent the default form submission
+
+    // Collect the mode selected by the user
+    selectedMode = document.getElementById('mode-select').value;
 
     // Collect the weights entered by the user
     userWeights = {
@@ -22,6 +68,10 @@ document.getElementById('weight-form').addEventListener('submit', function(event
     };
 
     console.log('User Weights:', userWeights);
+    console.log('Selected Mode:', selectedMode);
+
+    // Update the directions profile based on the selected mode
+    directionsControl.setProfile(`mapbox/${selectedMode}`);
 });
 
 // Geolocation and map setup
@@ -38,6 +88,7 @@ function errorLocation() {
     setupMap([1.8882, 52.4867]);  // Fallback coordinates
 }
 
+// Setup map with the initial mode
 function setupMap(center) {
     const map = new mapboxgl.Map({
         container: 'map',
@@ -57,24 +108,27 @@ function setupMap(center) {
         })
     );
 
-    const directions = new MapboxDirections({
+    // Initialize Mapbox Directions with the default mode
+    directionsControl = new MapboxDirections({
         accessToken: mapboxgl.accessToken,
         alternatives: true,
         unit: 'metric',
-        profile: 'mapbox/cycling',
+        profile: `mapbox/${selectedMode}`,  // Use the default selected mode here
     });
 
-    map.addControl(directions, 'top-left');
+    map.addControl(directionsControl, 'top-left');
 
-    directions.on('route', function(event) {
+    directionsControl.on('route', function(event) {
         const routes = event.route;
         const start_location = routes[0].legs[0].steps[0].maneuver.location.join(',');
         const end_location = routes[0].legs[0].steps.slice(-1)[0].maneuver.location.join(',');
-        const start_location_name =routes[0].legs[0].summary;
-        const end_location_name = routes[0].legs.slice(-1)[0].summary;  
-        console.log(routes[0])
-        // Retrieve the selected mode from the directions control
-        //const selectedMode = directions.getOrigin().properties.mode; // Get the mode from the directions control
+        const start_location_name = routes[0].legs[0].summary;
+        const end_location_name = routes[0].legs.slice(-1)[0].summary;
+        if(previousControl !== null) {
+            map.removeControl(previousControl);
+            previousControl = null;
+        }
+        console.log(routes[0]);
 
         // Send data to the Flask server with user-selected weights
         fetch('/optimize_route', {
@@ -85,41 +139,23 @@ function setupMap(center) {
             body: JSON.stringify({
                 start_location: start_location,
                 end_location: end_location,
-                mode: 'cycling',
+                mode: selectedMode,  // Use the selected mode here
                 start_location_name, 
                 end_location_name,
                 weights: userWeights  // Use the user-selected weights
             })
         })
         .then(response => response.json())
-        .then(data => {
-            const bestRoute = data['First Row'];
-            const coordinates = bestRoute['route_geometry'];
+        .then(response => {
+            const optimizedRoutes = response.optimized_routes
+            const optimizedRouteControl = new OptimizedRoutesControl(optimizedRoutes);
+            APP_STORE.optimizedRoutes = optimizedRoutes;
+      
 
-            // Add the optimized route to the map
-            map.addLayer({
-                id: 'optimized-route',
-                type: 'line',
-                source: {
-                    type: 'geojson',
-                    data: {
-                        type: 'Feature',
-                        properties: {},
-                        geometry: {
-                            type: 'LineString',
-                            coordinates: coordinates
-                        }
-                    }
-                },
-                layout: {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                },
-                paint: {
-                    'line-color': '#ff0000',
-                    'line-width': 8
-                }
-            });
+            map.addControl(optimizedRouteControl, 'top-right');
+            previousControl = optimizedRouteControl;
+          
+            
         })
         .catch(error => console.error('Error:', error));
     });

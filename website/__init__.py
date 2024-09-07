@@ -6,13 +6,13 @@ from flask_login import LoginManager
 db = SQLAlchemy()
 DB_NAME = "database.db"
 
-
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     db.init_app(app)
 
+    # Registering Blueprints
     from .views import views
     from .auth import auth
     from .optimizer import optimizer
@@ -21,11 +21,14 @@ def create_app():
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(optimizer, url_prefix="/")
 
-    from .models import User, Route
-    
+    # Import the models
+    from .models import User, Route, Navigation  # Ensure all models are imported
+
+    # Create database tables if they don't exist
     with app.app_context():
         db.create_all()
 
+    # Set up the LoginManager
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
@@ -35,6 +38,7 @@ def create_app():
         return User.query.get(int(id))
 
     return app
+
 
 
 def create_database(app):
