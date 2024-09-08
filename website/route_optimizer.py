@@ -12,6 +12,11 @@ import json
 # Define your Mapbox token
 MAPBOX_TOKEN = 'pk.eyJ1IjoiZGFuaWVsYWthbGFtdWRvIiwiYSI6ImNseW4wNno4bTAxNDAya3M0YjJqNHkwamMifQ.RXniMT8_Seus5fdPUJ2XRA'
 
+# Set the random seed for reproducibility
+RANDOM_SEED = 0
+random.seed(RANDOM_SEED)
+np.random.seed(RANDOM_SEED)
+
 # Average speeds in km/h for different modes
 speeds = {
     "driving": 60,
