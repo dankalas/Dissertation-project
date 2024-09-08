@@ -1,8 +1,8 @@
 FROM python:3.9
+
+WORKDIR /usr/src/app
 COPY requirements.txt .
 COPY . .
-WORKDIR /usr/src/app
-
 RUN apt-get update && apt-get install nodejs npm python3-dev build-essential default-libmysqlclient-dev -y
 
 RUN pip install waitress
