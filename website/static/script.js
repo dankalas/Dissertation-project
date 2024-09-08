@@ -11,7 +11,7 @@ class OptimizedRoutesControl {
         this.container = document.createElement('div');
         this.container.className = 'mapboxgl-ctrl scrollable-list-container bg-light-subtle';
         this.container.style.width = '250px';
-        this.container.style.maxHeight = '100vh';
+        this.container.style.maxHeight = '90vh';
         this.container.style.overflowY = 'auto';
         this.container.style.backgroundColor = '#f8f8f8';
         this.container.style.borderLeft = '1px solid #ccc';
@@ -129,6 +129,7 @@ function setupMap(center) {
             previousControl = null;
         }
         console.log(routes[0]);
+        $("#loadingModal").modal("show")
 
         // Send data to the Flask server with user-selected weights
         fetch('/optimize_route', {
@@ -151,12 +152,12 @@ function setupMap(center) {
             const optimizedRouteControl = new OptimizedRoutesControl(optimizedRoutes);
             APP_STORE.optimizedRoutes = optimizedRoutes;
       
-
+            $("#loadingModal").modal("hide")
             map.addControl(optimizedRouteControl, 'top-right');
             previousControl = optimizedRouteControl;
           
             
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {console.error('Error:', error);  $("#loadingModal").modal("hide");});
     });
 }

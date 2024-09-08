@@ -332,18 +332,24 @@ def run_process(start_location, end_location, mode, weights):
         ret = {}
         for key in results:
             print(type(results[key]))
-            if isinstance(results[key], str) or isinstance(results[key], int) or isinstance(results[key], float):
-                ret[key] = results[key]
-            elif isinstance(results[key], np.float64) or isinstance(results[key], np.float32):
-                ret[key] = results[key].item()
+      
+            if isinstance(results[key], np.floating):
+                print(key, results[key])
+            
+                ret[key] = float(results[key].item())
             elif isinstance(results[key], pd.Series):
                 jsonvalue = results[key].to_json()
                 obj = json.loads(jsonvalue)
                 for k in obj:
                     ret[k] = obj[k] 
                 continue
+            else:
+                obj = json.loads(json.dumps({key: results[key]}))
+                ret[key] = obj[key]
+                print(obj)
+                
             
         return ret
             
-    print("result is", route_results)
+    # print("result is", route_results)
     return list(map(normalize_results, route_results))

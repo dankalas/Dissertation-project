@@ -2,14 +2,17 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
-
+import os;
 db = SQLAlchemy()
 DB_NAME = "database.db"
+DATABASE_URI="postgresql:///postgres:password@localhost:5432/optimizer_app"
+db_uri = os.getenv("DATABASE_URI", "sqlite:///database.db")
+print(db_uri)
 
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     db.init_app(app)
 
     # Registering Blueprints

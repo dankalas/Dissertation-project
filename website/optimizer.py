@@ -27,6 +27,7 @@ def optimize_route():
 
     # Call the run_process function and get the optimized routes
     optimized_routes = run_process(start_location, end_location, mode, weights)
+    print(optimized_routes)
 
     # Save the optimized routes in the database
     route_models = list(map(lambda route: Route(
@@ -52,4 +53,5 @@ def optimize_route():
         'optimized_routes': optimized_routes,
         'navigation_id': nav.id
     })
+
 

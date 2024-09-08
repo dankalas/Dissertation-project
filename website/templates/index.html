@@ -110,6 +110,16 @@
         .route-container { margin-top: 20px; }
         .route { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
         .route h3 { margin-top: 0; }
+
+        /* HTML: <div class="loader"></div> */
+.loader {
+    width: 60px;
+    aspect-ratio: 4;
+    background: radial-gradient(circle closest-side,#000 90%,#0000) 0/calc(100%/3) 100% space;
+    clip-path: inset(0 100% 0 0);
+    animation: l1 1s steps(4) infinite;
+  }
+  @keyframes l1 {to{clip-path: inset(0 -34% 0 0)}}
     </style>
 </head>
 <body>
@@ -176,24 +186,17 @@
     <div id='map'></div>
     <div id="route-summary" class="route-container"></div>
 
-    <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
+    <div class="modal fade" id="loadingModal" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="dataModalLabel">Data Display</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title">Optimizing Routes...</h5>
             </div>
-            <div class="modal-body">
-                <div id="results">
-                    <div class="d-flex flex-row p-2">
-                        <div class="p-2">Lion</div>
-                        <div class="flex-fill p-2">Value</div>
-                    </div>
-                </div>
+            <div class="modal-body align-items-center d-flex justify-content-center">
+                
+                <div class="p-4"><div class="loader"></div></div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
+
           </div>
         </div>
       </div>
