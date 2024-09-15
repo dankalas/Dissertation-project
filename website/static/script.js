@@ -9,6 +9,7 @@ class OptimizedRoutesControl {
     onAdd(map) {
         this.map = map;
         this.container = document.createElement('div');
+        this.container.id = "route-summary";
         this.container.className = 'mapboxgl-ctrl scrollable-list-container bg-light-subtle';
         this.container.style.width = '250px';
         this.container.style.maxHeight = '90vh';
