@@ -273,7 +273,7 @@ def run_process(start_location, end_location, mode, weights):
     # Define the function to fit the symbolic regression model
     def fit_symbolic_regression(X, y):
         est = SymbolicRegressor(
-            population_size=5000,
+            population_size=2000,
             generations=20, 
             stopping_criteria=0.01,
             p_crossover=0.7, 
