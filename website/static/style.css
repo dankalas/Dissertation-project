@@ -11,7 +11,7 @@ body{
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(#255, #e99);
+    background: linear-gradient(rgb(238, 151, 164),rgb(225, 231, 226));
     overflow: hidden;
 }
 
@@ -169,7 +169,7 @@ h2{
     left: 0;
     width: 100%;
     height: 40px;
-    background: linear-gradient(to right,#255,#e99);
+    background: linear-gradient(to right,rgb(247, 245, 245), rgba(196, 49, 71, 0.416));
     box-shadow: 0 2px 10px rgba(0, 0, 0, .4);
     font-size: 16px;
     color: #fff;
