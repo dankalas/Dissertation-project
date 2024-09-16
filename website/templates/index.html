@@ -198,8 +198,14 @@
         </div>
     </nav>
     
+    {% if user.is_authenticated %}
     <div id='map'></div>
     <div id="route-summary" class="route-container"></div>
+    {% else %}
+    <div class="container mt-4">
+        <p class="alert alert-warning text-center">Please log in to view the map and get your recommended route.</p>
+    </div>
+    {% endif %}
 
     <!-- Instruction Modal -->
     <div class="modal fade" id="instructionModal" tabindex="-1" aria-labelledby="instructionModalLabel" aria-hidden="true">
