@@ -4,8 +4,9 @@ const APP_STORE = {};
 let previousControl = null;
 class OptimizedRoutesControl {
     constructor(routeResults = []) {
-        this.routeResults = routeResults
+        this.routeResults = routeResults;
     }
+
     onAdd(map) {
         this.map = map;
         this.container = document.createElement('div');
@@ -18,27 +19,76 @@ class OptimizedRoutesControl {
         this.container.style.borderLeft = '1px solid #ccc';
         this.container.style.padding = '10px';
         this.container.classList.add('container');
-        
-        let innerHTML =  this.routeResults.map(route =>{
-           const inner = Object.entries(route).map(([key, value]) => {
+
+        // Create a select dropdown for routes
+        const select = document.createElement('select');
+        select.id = 'route-select';
+        select.className = 'form-control mb-2';
+
+        // Populate the dropdown with routes
+        this.routeResults.forEach((route, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = route["Route Label"];
+            select.appendChild(option);
+        });
+
+        // Handle route selection
+        select.addEventListener('change', () => {
+            const selectedIndex = select.value;
+            const selectedRoute = this.routeResults[selectedIndex];
+            if (selectedRoute) {
+                this.recordRoute(selectedRoute);
+            }
+        });
+
+        // Build the inner HTML for the container
+        let innerHTML = this.routeResults.map((route, index) => {
+            const inner = Object.entries(route).map(([key, value]) => {
                 return `<li class="list-group-item">
                     <p>${key}</p>
                     <p class="flex-fill">${value}</p>
-                </li>`
-            }).join('\n')
+                </li>`;
+            }).join('\n');
 
             return `
             <h4>${route["Route Label"]}</h4>
             <ul class="list-group">${inner}</ul>`;
-        }).join('<hr>')
-        this.container.innerHTML = innerHTML;
+        }).join('<hr>');
+
+        this.container.innerHTML = `
+            <h3>Available Routes</h3>
+            ${innerHTML}
+            <h4>Select a Route</h4>
+            ${select.outerHTML}
+        `;
+
         return this.container;
     }
 
     onRemove() {
         this.container.parentNode.removeChild(this.container);
         this.map = undefined;
-        
+    }
+
+    recordRoute(route) {
+        // Send selected route data to the server for processing
+        fetch('/complete_route', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                route_id: route.id,  // Assuming you have an id or similar to identify the route
+                route_data: route
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Route recorded:', data);
+            // Perform any additional actions needed after recording the route
+        })
+        .catch(error => console.error('Error:', error));
     }
 }
 
