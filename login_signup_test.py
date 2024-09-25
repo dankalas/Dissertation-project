@@ -28,8 +28,28 @@ class LoginSignupTest(unittest.TestCase):
     def tearDown(self):
         self.driver.close()
 
+   
+    def test_signup(self):
+        self.driver.get("http://127.0.0.1:5000/login?next=%2Flogout#")
+        signup_link = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'a.signUp-link')))
+        signup_link.click()
+        data = {
+                        "email-signup": "dkosy208@gmail.com",
+
+            "Firstname": "Kalamus",
+            "Lastname": "AKalad",
+            "password-signup": "asord1",
+            "password-confirm-signup": "asord1"
+        }
+        for key, value in data.items():
+            input_field = self.wait.until(EC.element_to_be_clickable((By.ID, key)))
+            input_field.send_keys(value)
+            sleep(2)
+        sign_up_button = self.wait.until(EC.element_to_be_clickable((By.ID, 'signup-submit')))
+        sign_up_button.click()
+        sleep(10)
+        self.assertIn("Choose a starting place", self.driver.page_source)
     def test_login(self):
-        return
         # Open your web page
         self.driver.get("http://127.0.0.1:5000/login?next=%2Flogout#")
         email = self.wait.until(EC.element_to_be_clickable((By.ID, 'email-login')))
@@ -43,28 +63,6 @@ class LoginSignupTest(unittest.TestCase):
    
         sign_in_button = self.wait.until(EC.element_to_be_clickable((By.ID, 'login-button')))
         sign_in_button.click()
-        sleep(2)
-        self.assertIn("Choose a starting place", self.driver.page_source)
-
-    def test_signup(self):
-        return
-        self.driver.get("http://127.0.0.1:5000/login?next=%2Flogout#")
-        signup_link = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'a.signUp-link')))
-        signup_link.click()
-        data = {
-                        "email-signup": "danielakalamudo2208@gmail.com",
-
-            "Firstname": "Daniel",
-            "Lastname": "AKalamudo",
-            "password-signup": "password",
-            "password-confirm-signup": "password"
-        }
-        for key, value in data.items():
-            input_field = self.wait.until(EC.element_to_be_clickable((By.ID, key)))
-            input_field.send_keys(value)
-            sleep(2)
-        sign_up_button = self.wait.until(EC.element_to_be_clickable((By.ID, 'signup-submit')))
-        sign_up_button.click()
         sleep(10)
         self.assertIn("Choose a starting place", self.driver.page_source)
 
