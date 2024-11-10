@@ -90,7 +90,7 @@ The application follows a modular architecture:
 ## Future Enhancements
 
 - Integration of real-world sustainability data
-- Multi-objective optimization using NSGA-II/III which is demoed in jupyter notebook file
+- Multi-objective optimization using NSGA-II/III which is demoed in jupyter notebook file(Pymoo_multi_objective_optimization_experiment.ipynb)
 - Enhanced visualization of preference impacts
 - Mobile application development
 - Integration with additional mapping services
